@@ -5,3 +5,4 @@ class emp(graphene.ObjectType):
     city=graphene.String()
     designation=graphene.String()
     experience_in_year=graphene.String()
+    learn=graphene.String()

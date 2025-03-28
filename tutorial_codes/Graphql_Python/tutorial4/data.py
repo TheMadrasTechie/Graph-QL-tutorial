@@ -6,7 +6,7 @@ def read_file():
         i=0
         for row in data:
             if(i>0):
-                li.append({"name":row[0],"city":row[1],"designation":row[2],"experience_in_year":row[3]})
+                li.append({"name":row[0],"city":row[1],"designation":row[2],"experience_in_year":row[3],"learn":row[0]+" "+row[3]})
             i=i+1
     f1.close()
     return(li)
