@@ -23,6 +23,10 @@ data=data=[
 	"city":"hyderabad",
 	"temperature":"32"
 },
+{
+	"city":"tiruppur",
+	"temperature":"32"
+},
 ]
 
 def read_data():
