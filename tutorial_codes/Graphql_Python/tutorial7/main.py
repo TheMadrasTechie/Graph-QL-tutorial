@@ -1,32 +1,52 @@
 import graphene
 from fastapi import FastAPI
-from starlette.graphql import GraphQLApp
+from starlette_graphene3 import GraphQLApp, make_graphiql_handler
 
-class player(graphene.Interface):
-    name=graphene.String()
-    country=graphene.String()
+# Define the Interface
+class Player(graphene.Interface):
+    name = graphene.String()
+    country = graphene.String()
 
-class footballplayer(graphene.ObjectType):
+# Implement the Interface in FootballPlayer
+class FootballPlayer(graphene.ObjectType):
     class Meta:
-        interfaces=(player,)
-    position=graphene.String()
+        interfaces = (Player,)
 
-class cricketplayer(graphene.ObjectType):
+    position = graphene.String()
+
+# Implement the Interface in CricketPlayer
+class CricketPlayer(graphene.ObjectType):
     class Meta:
-        interfaces=(player,)
-    battingorder=graphene.Int()
+        interfaces = (Player,)
 
-class query(graphene.ObjectType):
+    battingorder = graphene.Int()
+
+# Define the Query class
+class Query(graphene.ObjectType):
     class Meta:
-        name="interfacequery"
-        description="implements field type from interface"
-    fplayer=graphene.Field(footballplayer,description="coming from football player interface")
-    def resolve_fplayer(self,info):
-        return {"name":"player1","country":"Spain","position":"Central Back"}
-    cplayer=graphene.Field(cricketplayer,description="coming from cricket player interface")
-    def resolve_cplayer(self,info):
-        return {"name":"player2","country":"India","battingorder":1}
+        name = "interfacequery"
+        description = "implements field type from interface"
 
-app=FastAPI()
-app.add_route("/graphql",GraphQLApp(schema=graphene.Schema(query=query)))
-print(graphene.Schema(query=query))
+    fplayer = graphene.Field(FootballPlayer, description="coming from football player interface")
+    cplayer = graphene.Field(CricketPlayer, description="coming from cricket player interface")
+
+    def resolve_fplayer(self, info):
+        return {"name": "player1", "country": "Spain", "position": "Central Back"}
+
+    def resolve_cplayer(self, info):
+        return {"name": "player2", "country": "India", "battingorder": 1}
+
+# FastAPI app setup
+app = FastAPI()
+
+# Create GraphQL schema
+schema = graphene.Schema(query=Query)
+
+# GraphQL app with GraphiQL enabled
+graphql_app = GraphQLApp(schema=schema, on_get=make_graphiql_handler())
+
+# Route
+app.add_route("/graphql", graphql_app)
+
+# Optional: print schema
+print(schema)
