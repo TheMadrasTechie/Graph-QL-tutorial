@@ -1,9 +1,15 @@
 import graphene
 from fastapi import FastAPI
-from starlette.graphql import GraphQLApp
+from starlette_graphene3 import GraphQLApp, make_graphiql_handler
 from mapping import query
 
-app=FastAPI()
-app.add_route("/graphql",GraphQLApp(schema=graphene.Schema(query=query)))
+app = FastAPI()
 
-print(graphene.Schema(query=query))
+schema = graphene.Schema(query=query)
+
+# Enable GraphiQL UI for GET requests
+graphql_app = GraphQLApp(schema=schema, on_get=make_graphiql_handler())
+
+app.add_route("/graphql", graphql_app)
+
+print(schema)
